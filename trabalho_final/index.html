@@ -119,7 +119,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#carregar-bibliotecas" id="toc-carregar-bibliotecas" class="nav-link" data-scroll-target="#carregar-bibliotecas">Carregar bibliotecas</a></li>
   <li><a href="#importar-dados" id="toc-importar-dados" class="nav-link" data-scroll-target="#importar-dados">Importar dados</a></li>
   <li><a href="#limparorganizar-os-dados" id="toc-limparorganizar-os-dados" class="nav-link" data-scroll-target="#limparorganizar-os-dados">Limpar/organizar os dados</a></li>
-  <li><a href="#análise-exploratória" id="toc-análise-exploratória" class="nav-link" data-scroll-target="#análise-exploratória">Análise exploratória</a></li>
+  <li><a href="#análise-exploratória" id="toc-análise-exploratória" class="nav-link" data-scroll-target="#análise-exploratória">Análise exploratória</a>
+  <ul class="collapse">
+  <li><a href="#quais-são-os-sistemas-presentes-na-base-mananciais" id="toc-quais-são-os-sistemas-presentes-na-base-mananciais" class="nav-link" data-scroll-target="#quais-são-os-sistemas-presentes-na-base-mananciais">Quais são os sistemas presentes na base Mananciais?</a></li>
+  <li><a href="#qual-é-o-sistema-com-a-menor-volume-armazenado-atualmente" id="toc-qual-é-o-sistema-com-a-menor-volume-armazenado-atualmente" class="nav-link" data-scroll-target="#qual-é-o-sistema-com-a-menor-volume-armazenado-atualmente">Qual é o sistema com a menor volume armazenado atualmente?</a></li>
+  <li><a href="#como-o-volume-armazenado-variou-ao-longo-de-2022" id="toc-como-o-volume-armazenado-variou-ao-longo-de-2022" class="nav-link" data-scroll-target="#como-o-volume-armazenado-variou-ao-longo-de-2022">Como o volume armazenado variou ao longo de 2022?</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -164,23 +169,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introdução" class="level2">
 <h2 class="anchored" data-anchor-id="introdução">Introdução</h2>
-<p>Explorando dados sobre os mananciais que abastecem a Região Metropolitana de São Paulo</p>
+<p>Explorando dados sobre os mananciais que abastecem a Região Metropolitana de São Paulo. Estes dados são produzidos pela <a href="https://mananciais.sabesp.com.br/Situacao">SABESP</a>, e aqui utilizei os dados do pacote em R <a href="https://beatrizmilz.github.io/mananciais/">Mananciais</a>, que disponibiliza a base dos dados atualizada diariamente em CSV.</p>
 </section>
 <section id="objetivos" class="level2">
 <h2 class="anchored" data-anchor-id="objetivos">Objetivos</h2>
+<p>Responder as seguintes perguntas:</p>
 <ul>
-<li></li>
+<li><p>Quais são os sistemas presentes na base Mananciais?</p></li>
+<li><p>Qual é o sistema com a menor volume armazenado atualmente?</p></li>
+<li><p>Como o volume armazenado variou ao longo de 2022?</p></li>
 </ul>
 </section>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<p>Este trabalho foi desenvolvido em um computador com sistema Mac OS, com a versão do Python 3.9.13, utilizando o VS Code, o Quarto e a extensão do Quarto para o VS Code.</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> platform <span class="im">import</span> python_version</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>python_version()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>'3.9.13'</code></pre>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># descobrindo a versao do python</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> platform <span class="im">import</span> python_version</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>versao_python <span class="op">=</span> python_version()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># escrevendo um parágrafo que apresente o valor guardado na variável versao_python</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Markdown</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="st">"""</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">Este trabalho foi desenvolvido em um computador com sistema Mac OS,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">com a versão do Python </span><span class="sc">{versao_python}</span><span class="st">, utilizando a IDE VS Code,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">o software Quarto e a extensão do Quarto para o VS Code.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>.<span class="bu">format</span>(versao_python <span class="op">=</span> versao_python)))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p>Este trabalho foi desenvolvido em um computador com sistema Mac OS, com a versão do Python 3.9.13, utilizando a IDE VS Code, o software Quarto e a extensão do Quarto para o VS Code.</p>
 </div>
 </div>
 </section>
@@ -188,155 +208,373 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="preparando-o-ambiente">Preparando o ambiente</h2>
 <p>Antes de iniciar a explorar os dados, foi preciso preparar o ambiente. Primeiro criei um virtual environment para a instalação dos pacotes em Python utilizando o seguinte código no terminal:</p>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>python3 <span class="op">-</span>m venv env</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criando ambiente virtual chamado env</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>python3 <span class="op">-</span>m venv env</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Para utilizar o virtual environment criado, utilizei o seguinte código no terminal:</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>source env<span class="op">/</span><span class="bu">bin</span><span class="op">/</span>activate</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ativando o ambiente virtual criado</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>source env<span class="op">/</span><span class="bu">bin</span><span class="op">/</span>activate</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Foi necessário também atualizar o pip (usado para instalar as bibliotecas), e instalar o jupyter e os pacotes:</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Para instalar o jupyter</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pip install jupyter</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># atualizar o pip</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>pip install <span class="op">--</span>upgrade pip</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Para instalar as bibliotecas pandas e seaborn:</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>pip install pandas</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>pip install seaborn</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Para instalar o jupyter</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pip install jupyter</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># atualizar o pip</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>pip install <span class="op">--</span>upgrade pip</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Para instalar as bibliotecas pandas e seaborn:</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>pip install pandas</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>pip install seaborn</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="carregar-bibliotecas" class="level2">
 <h2 class="anchored" data-anchor-id="carregar-bibliotecas">Carregar bibliotecas</h2>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># importar as bibliotecas usadas</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="importar-dados" class="level2">
 <h2 class="anchored" data-anchor-id="importar-dados">Importar dados</h2>
 <div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>url_mananciais <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/beatrizmilz/mananciais/master/inst/extdata/mananciais.csv'</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>mananciais <span class="op">=</span> pd.read_csv(url_mananciais,  sep <span class="op">=</span> <span class="st">";"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># salvando o link onde a base está disponível</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>url_mananciais <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/beatrizmilz/mananciais/master/inst/extdata/mananciais.csv'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># lendo o CSV, o separador é ;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>mananciais <span class="op">=</span> pd.read_csv(url_mananciais,  sep <span class="op">=</span> <span class="st">";"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="limparorganizar-os-dados" class="level2">
 <h2 class="anchored" data-anchor-id="limparorganizar-os-dados">Limpar/organizar os dados</h2>
+<p>Quais são as colunas disponíveis?</p>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mananciais.info()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># descobrindo as colunas e seus tipos</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mananciais.info()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 52145 entries, 0 to 52144
+RangeIndex: 52194 entries, 0 to 52193
 Data columns (total 8 columns):
  #   Column               Non-Null Count  Dtype 
 ---  ------               --------------  ----- 
- 0   data                 52145 non-null  object
- 1   sistema              52145 non-null  object
- 2   volume_porcentagem   52145 non-null  object
- 3   volume_variacao      52145 non-null  object
- 4   volume_operacional   52145 non-null  object
- 5   pluviometria_dia     52145 non-null  object
- 6   pluviometria_mensal  52145 non-null  object
- 7   pluviometria_hist    51900 non-null  object
+ 0   data                 52194 non-null  object
+ 1   sistema              52194 non-null  object
+ 2   volume_porcentagem   52194 non-null  object
+ 3   volume_variacao      52194 non-null  object
+ 4   volume_operacional   52194 non-null  object
+ 5   pluviometria_dia     52194 non-null  object
+ 6   pluviometria_mensal  52194 non-null  object
+ 7   pluviometria_hist    51949 non-null  object
 dtypes: object(8)
 memory usage: 3.2+ MB</code></pre>
 </div>
 </div>
-<p>Quais são as colunas disponíveis?</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># funcao para converter em numero</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> converter_em_numero(serie):</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>   x <span class="op">=</span> pd.to_numeric(serie.<span class="bu">str</span>.replace(<span class="st">','</span>, <span class="st">'.'</span>)) </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span>(x)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de uso!</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># converter_em_numero(mananciais['volume_porcentagem'])</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># funcao para converter em numero</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> converter_em_numero(serie):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>   x <span class="op">=</span> pd.to_numeric(serie.<span class="bu">str</span>.replace(<span class="st">','</span>, <span class="st">'.'</span>)) </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span>(x)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># exemplo de uso!</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># converter_em_numero(mananciais['volume_porcentagem'])</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado <span class="op">=</span> mananciais.assign(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> pd.to_datetime(mananciais[<span class="st">'data'</span>]),</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    volume_porcentagem <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'volume_porcentagem'</span>]),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    volume_variacao <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'volume_variacao'</span>]),</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    volume_operacional <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'volume_operacional'</span>]),</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    pluviometria_dia <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'pluviometria_dia'</span>]),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    pluviometria_mensal <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'pluviometria_mensal'</span>]),</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    pluviometria_hist <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'pluviometria_hist'</span>])</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado <span class="op">=</span> mananciais.assign(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># convertendo a coluna data em tipo datetime</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> pd.to_datetime(mananciais[<span class="st">'data'</span>]),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># daqui em diante: convertendo os valores das colunas em número</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    volume_porcentagem <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'volume_porcentagem'</span>]),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    volume_variacao <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'volume_variacao'</span>]),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    volume_operacional <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'volume_operacional'</span>]),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    pluviometria_dia <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'pluviometria_dia'</span>]),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    pluviometria_mensal <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'pluviometria_mensal'</span>]),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    pluviometria_hist <span class="op">=</span> <span class="kw">lambda</span> x: converter_em_numero(x[<span class="st">'pluviometria_hist'</span>])</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado.info()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># conferindo as colunas e seus tipos</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado.info()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 52145 entries, 0 to 52144
+RangeIndex: 52194 entries, 0 to 52193
 Data columns (total 8 columns):
  #   Column               Non-Null Count  Dtype         
 ---  ------               --------------  -----         
- 0   data                 52145 non-null  datetime64[ns]
- 1   sistema              52145 non-null  object        
- 2   volume_porcentagem   52145 non-null  float64       
- 3   volume_variacao      52145 non-null  float64       
- 4   volume_operacional   52145 non-null  float64       
- 5   pluviometria_dia     52145 non-null  float64       
- 6   pluviometria_mensal  52145 non-null  float64       
- 7   pluviometria_hist    51900 non-null  float64       
+ 0   data                 52194 non-null  datetime64[ns]
+ 1   sistema              52194 non-null  object        
+ 2   volume_porcentagem   52194 non-null  float64       
+ 3   volume_variacao      52194 non-null  float64       
+ 4   volume_operacional   52194 non-null  float64       
+ 5   pluviometria_dia     52194 non-null  float64       
+ 6   pluviometria_mensal  52194 non-null  float64       
+ 7   pluviometria_hist    51949 non-null  float64       
 dtypes: datetime64[ns](1), float64(6), object(1)
 memory usage: 3.2+ MB</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado[<span class="st">'data_mes'</span>] <span class="op">=</span> pd.DatetimeIndex(mananciais_arrumado[<span class="st">'data'</span>]).month</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado[<span class="st">'data_ano'</span>] <span class="op">=</span> pd.DatetimeIndex(mananciais_arrumado[<span class="st">'data'</span>]).year</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado.info()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 52145 entries, 0 to 52144
-Data columns (total 10 columns):
- #   Column               Non-Null Count  Dtype         
----  ------               --------------  -----         
- 0   data                 52145 non-null  datetime64[ns]
- 1   sistema              52145 non-null  object        
- 2   volume_porcentagem   52145 non-null  float64       
- 3   volume_variacao      52145 non-null  float64       
- 4   volume_operacional   52145 non-null  float64       
- 5   pluviometria_dia     52145 non-null  float64       
- 6   pluviometria_mensal  52145 non-null  float64       
- 7   pluviometria_hist    51900 non-null  float64       
- 8   data_mes             52145 non-null  int64         
- 9   data_ano             52145 non-null  int64         
-dtypes: datetime64[ns](1), float64(6), int64(2), object(1)
-memory usage: 4.0+ MB</code></pre>
 </div>
 </div>
 </section>
 <section id="análise-exploratória" class="level2">
 <h2 class="anchored" data-anchor-id="análise-exploratória">Análise exploratória</h2>
+<section id="quais-são-os-sistemas-presentes-na-base-mananciais" class="level3">
+<h3 class="anchored" data-anchor-id="quais-são-os-sistemas-presentes-na-base-mananciais">Quais são os sistemas presentes na base Mananciais?</h3>
+<div class="cell" data-execution_count="11">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>array_mananciais <span class="op">=</span> mananciais_arrumado[<span class="st">'sistema'</span>].unique()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>lista_mananciais <span class="op">=</span> array_mananciais.tolist()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>texto_mananciais <span class="op">=</span> <span class="st">", "</span>.join(lista_mananciais[:<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>ultimo_sistema <span class="op">=</span> lista_mananciais[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>display(Markdown(<span class="st">"""</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="st">Os sistemas presentes na base são: </span><span class="sc">{texto_mananciais}</span><span class="st"> e </span><span class="sc">{ultimo_sistema}</span><span class="st">.</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>.<span class="bu">format</span>(texto_mananciais <span class="op">=</span> texto_mananciais, ultimo_sistema <span class="op">=</span> ultimo_sistema)))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p>Os sistemas presentes na base são: Cantareira, Alto Tietê, Guarapiranga, Cotia, Rio Grande, Rio Claro e São Lourenço.</p>
+</div>
+</div>
+</section>
+<section id="qual-é-o-sistema-com-a-menor-volume-armazenado-atualmente" class="level3">
+<h3 class="anchored" data-anchor-id="qual-é-o-sistema-com-a-menor-volume-armazenado-atualmente">Qual é o sistema com a menor volume armazenado atualmente?</h3>
+<div class="cell" data-execution_count="12">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtrando os dados com a data mais</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>sistemas_atualmente <span class="op">=</span> mananciais_arrumado.query(<span class="st">"data == data.max()"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># deixando a tabela mais apresentável</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># arredondando a coluna volume operacional</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>sistemas_atualmente[<span class="st">"Volume operacional"</span>] <span class="op">=</span> sistemas_atualmente[<span class="st">"volume_operacional"</span>].<span class="bu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># criando uma função para adicionar a porcentagem</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> adicionar_porcentagem(x):</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">}</span><span class="ss"> %"</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co"># aplicando a função de adicionar porcentagem</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>sistemas_atualmente[<span class="st">"Volume"</span>] <span class="op">=</span> sistemas_atualmente[<span class="st">"volume_porcentagem"</span>].<span class="bu">apply</span>(adicionar_porcentagem)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># renomeando coluna</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>sistemas_atualmente[<span class="st">"Sistema"</span>] <span class="op">=</span> sistemas_atualmente[<span class="st">"sistema"</span>]</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># selecionando as colunas desejadas</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>tabela_sistemas <span class="op">=</span> sistemas_atualmente.<span class="bu">filter</span>([<span class="st">"Sistema"</span>, <span class="st">"Volume"</span>, <span class="st">"Volume operacional"</span>])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>A seguir estão apresentados os sistemas ordenados por volume operacional (quantidade absoluta):</p>
 <div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mananciais[<span class="st">'sistema'</span>].unique()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>array(['Cantareira', 'Alto Tietê', 'Guarapiranga', 'Cotia', 'Rio Grande',
-       'Rio Claro', 'São Lourenço'], dtype=object)</code></pre>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ordenando de forma crescente segundo o Volume operacional</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tabela_sistemas.sort_values(<span class="st">"Volume operacional"</span>, ascending<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="24">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Sistema</th>
+      <th>Volume</th>
+      <th>Volume operacional</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>Rio Claro</td>
+      <td>43.5 %</td>
+      <td>5.9</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Cotia</td>
+      <td>52.2 %</td>
+      <td>8.6</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>São Lourenço</td>
+      <td>81.7 %</td>
+      <td>72.6</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Rio Grande</td>
+      <td>101.2 %</td>
+      <td>113.5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Guarapiranga</td>
+      <td>84.7 %</td>
+      <td>145.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Alto Tietê</td>
+      <td>48.1 %</td>
+      <td>269.8</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Cantareira</td>
+      <td>41.5 %</td>
+      <td>407.6</td>
+    </tr>
+  </tbody>
+</table>
 </div>
 </div>
+</div>
+<p>E os sistemas ordenados por volume percentual (quantidade relativa):</p>
 <div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado[<span class="st">'data'</span>].<span class="bu">min</span>()</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado[<span class="st">'data'</span>].<span class="bu">max</span>()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>Timestamp('2022-12-23 00:00:00')</code></pre>
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ordenando de forma crescente segundo o volume percentual</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>tabela_sistemas.sort_values(<span class="st">"Volume"</span>, ascending<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="25">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Sistema</th>
+      <th>Volume</th>
+      <th>Volume operacional</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>Rio Grande</td>
+      <td>101.2 %</td>
+      <td>113.5</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Cantareira</td>
+      <td>41.5 %</td>
+      <td>407.6</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Rio Claro</td>
+      <td>43.5 %</td>
+      <td>5.9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Alto Tietê</td>
+      <td>48.1 %</td>
+      <td>269.8</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Cotia</td>
+      <td>52.2 %</td>
+      <td>8.6</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>São Lourenço</td>
+      <td>81.7 %</td>
+      <td>72.6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Guarapiranga</td>
+      <td>84.7 %</td>
+      <td>145.0</td>
+    </tr>
+  </tbody>
+</table>
 </div>
 </div>
+</div>
+</section>
+<section id="como-o-volume-armazenado-variou-ao-longo-de-2022" class="level3">
+<h3 class="anchored" data-anchor-id="como-o-volume-armazenado-variou-ao-longo-de-2022">Como o volume armazenado variou ao longo de 2022?</h3>
 <div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado.query(<span class="st">"data == data.max()"</span>).sort_values(<span class="st">'volume_operacional'</span>,  ascending <span class="op">=</span> <span class="va">False</span>).<span class="bu">filter</span>([<span class="st">"sistema"</span>, <span class="st">"volume_porcentagem"</span>, <span class="st">"volume_operacional"</span>])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sns.lineplot(x = "data", y = "volume_porcentagem", data = mananciais_arrumado)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="16">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># criando a coluna do mês</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado[<span class="st">'data_mes'</span>] <span class="op">=</span> pd.DatetimeIndex(mananciais_arrumado[<span class="st">'data'</span>]).month</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># criando a coluna do ano</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>mananciais_arrumado[<span class="st">'data_ano'</span>] <span class="op">=</span> pd.DatetimeIndex(mananciais_arrumado[<span class="st">'data'</span>]).year</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="17">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mananciais_2022 <span class="op">=</span> mananciais_arrumado.query(<span class="st">"data_ano == 2022"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sns.lineplot(x = "data", y = "volume_porcentagem", data = mananciais_2022)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li>Agrupar por ano e sistema</li>
+</ul>
+<div class="cell" data-execution_count="18">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mananciais_sumarizado <span class="op">=</span> (</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    mananciais_arrumado.</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    query(<span class="st">"data_ano == 2022"</span>).</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    groupby([<span class="st">"sistema"</span>, <span class="st">"data_mes"</span>], as_index <span class="op">=</span> <span class="va">False</span>).</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    agg(media_porcentagem <span class="op">=</span> (<span class="st">"volume_porcentagem"</span>, <span class="st">"mean"</span>))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>mananciais_sumarizado</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="29">
 
 <div>
 
@@ -345,71 +583,186 @@ memory usage: 4.0+ MB</code></pre>
     <tr>
       <th></th>
       <th>sistema</th>
-      <th>volume_porcentagem</th>
-      <th>volume_operacional</th>
+      <th>data_mes</th>
+      <th>media_porcentagem</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>Cantareira</td>
-      <td>38.8</td>
-      <td>381.35162</td>
+      <td>Alto Tietê</td>
+      <td>1</td>
+      <td>46.477419</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Alto Tietê</td>
-      <td>47.6</td>
-      <td>266.50676</td>
+      <td>2</td>
+      <td>55.867857</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Guarapiranga</td>
-      <td>84.1</td>
-      <td>143.98178</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Rio Grande</td>
-      <td>101.7</td>
-      <td>114.10027</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>São Lourenço</td>
-      <td>83.1</td>
-      <td>73.84800</td>
+      <td>Alto Tietê</td>
+      <td>3</td>
+      <td>57.138710</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Cotia</td>
-      <td>52.3</td>
-      <td>8.63416</td>
+      <td>Alto Tietê</td>
+      <td>4</td>
+      <td>61.060000</td>
     </tr>
     <tr>
-      <th>5</th>
-      <td>Rio Claro</td>
-      <td>52.0</td>
-      <td>7.10313</td>
+      <th>4</th>
+      <td>Alto Tietê</td>
+      <td>5</td>
+      <td>63.383871</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>São Lourenço</td>
+      <td>8</td>
+      <td>71.706452</td>
+    </tr>
+    <tr>
+      <th>80</th>
+      <td>São Lourenço</td>
+      <td>9</td>
+      <td>65.576667</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>São Lourenço</td>
+      <td>10</td>
+      <td>62.609677</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>São Lourenço</td>
+      <td>11</td>
+      <td>73.436667</td>
+    </tr>
+    <tr>
+      <th>83</th>
+      <td>São Lourenço</td>
+      <td>12</td>
+      <td>80.670000</td>
+    </tr>
+  </tbody>
+</table>
+<p>84 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="19">
+<details open="">
+<summary>Código</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>dados_cantareira <span class="op">=</span> mananciais_sumarizado.query(<span class="st">"sistema == 'Cantareira'"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>dados_cantareira</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># sns.lineplot(x = mananciais_sumarizado["data_mes"], y = mananciais_sumarizado["media_porcentagem"], dropna = True)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="30">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>sistema</th>
+      <th>data_mes</th>
+      <th>media_porcentagem</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>12</th>
+      <td>Cantareira</td>
+      <td>1</td>
+      <td>28.867742</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Cantareira</td>
+      <td>2</td>
+      <td>41.014286</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Cantareira</td>
+      <td>3</td>
+      <td>44.196774</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Cantareira</td>
+      <td>4</td>
+      <td>44.876667</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Cantareira</td>
+      <td>5</td>
+      <td>42.903226</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Cantareira</td>
+      <td>6</td>
+      <td>40.956667</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Cantareira</td>
+      <td>7</td>
+      <td>37.938710</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Cantareira</td>
+      <td>8</td>
+      <td>34.780645</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Cantareira</td>
+      <td>9</td>
+      <td>31.376667</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Cantareira</td>
+      <td>10</td>
+      <td>32.438710</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Cantareira</td>
+      <td>11</td>
+      <td>32.100000</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Cantareira</td>
+      <td>12</td>
+      <td>37.370000</td>
     </tr>
   </tbody>
 </table>
 </div>
 </div>
 </div>
-<ul>
-<li>Agrupar por ano e sistema</li>
-</ul>
-<div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mananciais_sumarizado_mes_ano <span class="op">=</span> (mananciais_arrumado.</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>groupby([<span class="st">"sistema"</span>, <span class="st">"data_ano"</span>], as_index <span class="op">=</span> <span class="va">False</span>).</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>agg(media_medida_porcentagem <span class="op">=</span> (<span class="st">"volume_porcentagem"</span>, <span class="st">"mean"</span>)))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dados_cantareira <span class="op">=</span> mananciais_sumarizado_mes_ano.query(<span class="st">"sistema == 'Cantareira'"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sns.lineplot(dados_cantareira, x = 'data_ano',  y = 'media_medida_porcentagem' )</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+</section>
 </section>
 
 </main>

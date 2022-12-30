@@ -9,25 +9,44 @@ toc: true
 draft: false
 jupyter: python3
 lang: pt
+code-fold: show
 ---
+
 
 ## Introdução
 
-Explorando dados sobre os mananciais que abastecem a Região Metropolitana de São Paulo
+Explorando dados sobre os mananciais que abastecem a Região Metropolitana de São Paulo. Estes dados são produzidos pela [SABESP](https://mananciais.sabesp.com.br/Situacao), e aqui utilizei os dados do pacote em R [Mananciais](https://beatrizmilz.github.io/mananciais/), que disponibiliza a base dos dados atualizada diariamente em CSV.
 
 ## Objetivos
 
--
+Responder as seguintes perguntas:
+
+- Quais são os sistemas presentes na base Mananciais? 
+
+- Qual é o sistema com a menor volume armazenado atualmente?
+
+- Como o volume armazenado variou ao longo de 2022?
 
 ## Setup
 
-Este trabalho foi desenvolvido em um computador com sistema Mac OS, com a versão do Python 3.9.13, utilizando o VS Code, o Quarto e a extensão do Quarto para o VS Code.
-
 ```{python}
-from platform import python_version
 
-python_version()
+# descobrindo a versao do python
+from platform import python_version
+versao_python = python_version()
+
+# escrevendo um parágrafo que apresente o valor guardado na variável versao_python
+
+from IPython.display import display, Markdown
+
+display(Markdown("""
+Este trabalho foi desenvolvido em um computador com sistema Mac OS,
+com a versão do Python {versao_python}, utilizando a IDE VS Code,
+o software Quarto e a extensão do Quarto para o VS Code.
+""".format(versao_python = versao_python)))
+
 ```
+
 
 ## Preparando o ambiente
 
@@ -35,6 +54,7 @@ Antes de iniciar a explorar os dados, foi preciso preparar o ambiente. Primeiro 
 
 ```{python}
 #| eval: false
+# criando ambiente virtual chamado env
 python3 -m venv env
 ```
 
@@ -42,6 +62,8 @@ Para utilizar o virtual environment criado, utilizei o seguinte código no termi
 
 ```{python}
 #| eval: false
+
+# ativando o ambiente virtual criado
 source env/bin/activate
 ```
 
@@ -68,6 +90,7 @@ pip install seaborn
 
 
 ```{python}
+# importar as bibliotecas usadas
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -77,29 +100,25 @@ import seaborn as sns
 ## Importar dados
 
 ```{python}
-
+# salvando o link onde a base está disponível
 url_mananciais = 'https://raw.githubusercontent.com/beatrizmilz/mananciais/master/inst/extdata/mananciais.csv'
 
+# lendo o CSV, o separador é ;
 mananciais = pd.read_csv(url_mananciais,  sep = ";")
 ```
 
 
 ## Limpar/organizar os dados
 
-```{python}
-mananciais.info()
-```
-
-
-
-
-
 Quais são as colunas disponíveis?
 
 ```{python}
+# descobrindo as colunas e seus tipos
+mananciais.info()
+```
 
+```{python}
 # funcao para converter em numero
-
 def converter_em_numero(serie):
    x = pd.to_numeric(serie.str.replace(',', '.')) 
    return(x)
@@ -107,13 +126,13 @@ def converter_em_numero(serie):
 
 # exemplo de uso!
 # converter_em_numero(mananciais['volume_porcentagem'])
-
 ```
 
 ```{python}
-
 mananciais_arrumado = mananciais.assign(
+    # convertendo a coluna data em tipo datetime
     data = pd.to_datetime(mananciais['data']),
+    # daqui em diante: convertendo os valores das colunas em número
     volume_porcentagem = lambda x: converter_em_numero(x['volume_porcentagem']),
     volume_variacao = lambda x: converter_em_numero(x['volume_variacao']),
     volume_operacional = lambda x: converter_em_numero(x['volume_operacional']),
@@ -124,56 +143,119 @@ mananciais_arrumado = mananciais.assign(
 ```
 
 
-```{python}
-mananciais_arrumado.info()
-```
+
 
 ```{python}
-mananciais_arrumado['data_mes'] = pd.DatetimeIndex(mananciais_arrumado['data']).month
-
-mananciais_arrumado['data_ano'] = pd.DatetimeIndex(mananciais_arrumado['data']).year
-```
-
-```{python}
+# conferindo as colunas e seus tipos
 mananciais_arrumado.info()
 ```
 
 ## Análise exploratória
 
+### Quais são os sistemas presentes na base Mananciais? 
+
 ```{python}
-mananciais.
+array_mananciais = mananciais_arrumado['sistema'].unique()
+
+lista_mananciais = array_mananciais.tolist()
+
+texto_mananciais = ", ".join(lista_mananciais[:-1])
+
+ultimo_sistema = lista_mananciais[-1]
+
+display(Markdown("""
+Os sistemas presentes na base são: {texto_mananciais} e {ultimo_sistema}.
+""".format(texto_mananciais = texto_mananciais, ultimo_sistema = ultimo_sistema)))
+
+```
+
+
+### Qual é o sistema com a menor volume armazenado atualmente?
+
+```{python}
+#| warning: false
+
+# filtrando os dados com a data mais
+sistemas_atualmente = mananciais_arrumado.query("data == data.max()")
+
+# deixando a tabela mais apresentável
+# arredondando a coluna volume operacional
+sistemas_atualmente["Volume operacional"] = sistemas_atualmente["volume_operacional"].round(1)
+
+# criando uma função para adicionar a porcentagem
+def adicionar_porcentagem(x):
+    return f"{x} %"
+
+# aplicando a função de adicionar porcentagem
+sistemas_atualmente["Volume"] = sistemas_atualmente["volume_porcentagem"].apply(adicionar_porcentagem)
+
+# renomeando coluna
+sistemas_atualmente["Sistema"] = sistemas_atualmente["sistema"]
+
+# selecionando as colunas desejadas
+tabela_sistemas = sistemas_atualmente.filter(["Sistema", "Volume", "Volume operacional"])
+```
+
+
+A seguir estão apresentados os sistemas ordenados por  volume operacional (quantidade absoluta):
+```{python}
+# ordenando de forma crescente segundo o Volume operacional
+tabela_sistemas.sort_values("Volume operacional", ascending=True)
+```
+
+
+E os sistemas ordenados por volume percentual (quantidade relativa):
+```{python}
+# ordenando de forma crescente segundo o volume percentual
+tabela_sistemas.sort_values("Volume", ascending=True)
+```
+
+
+### Como o volume armazenado variou ao longo de 2022?
+
+
+
+
+```{python}
+# sns.lineplot(x = "data", y = "volume_porcentagem", data = mananciais_arrumado)
 ```
 
 
 ```{python}
-mananciais['sistema'].unique()
+# criando a coluna do mês
+mananciais_arrumado['data_mes'] = pd.DatetimeIndex(mananciais_arrumado['data']).month
+
+# criando a coluna do ano
+mananciais_arrumado['data_ano'] = pd.DatetimeIndex(mananciais_arrumado['data']).year
 ```
 
-```{python}
-mananciais_arrumado['data'].min()
-mananciais_arrumado['data'].max()
-```
-
 
 ```{python}
-mananciais_arrumado.query("data == data.max()").sort_values('volume_operacional',  ascending = False).filter(["sistema", "volume_porcentagem", "volume_operacional"])
+mananciais_2022 = mananciais_arrumado.query("data_ano == 2022")
+
+
+# sns.lineplot(x = "data", y = "volume_porcentagem", data = mananciais_2022)
 ```
 
 
 - Agrupar por ano e sistema
 
 ```{python}
-
-mananciais_sumarizado_mes_ano = (mananciais_arrumado.
-groupby(["sistema", "data_ano"], as_index = False).
-agg(media_medida_porcentagem = ("volume_porcentagem", "mean")))
-
+mananciais_sumarizado = (
+    mananciais_arrumado.
+    query("data_ano == 2022").
+    groupby(["sistema", "data_mes"], as_index = False).
+    agg(media_porcentagem = ("volume_porcentagem", "mean"))
+    )
+mananciais_sumarizado
 ```
 
 ```{python}
-dados_cantareira = mananciais_sumarizado_mes_ano.query("sistema == 'Cantareira'")
+dados_cantareira = mananciais_sumarizado.query("sistema == 'Cantareira'")
 
 
+dados_cantareira
 
-# sns.lineplot(dados_cantareira, x = 'data_ano',  y = 'media_medida_porcentagem' )
+
+# sns.lineplot(x = mananciais_sumarizado["data_mes"], y = mananciais_sumarizado["media_porcentagem"], dropna = True)
 ```
