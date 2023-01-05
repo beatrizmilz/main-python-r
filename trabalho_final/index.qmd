@@ -94,6 +94,7 @@ pip install seaborn
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import matplotlib.pyplot as plt
 ```
 
 
@@ -139,9 +140,20 @@ mananciais_arrumado = mananciais.assign(
     pluviometria_dia = lambda x: converter_em_numero(x['pluviometria_dia']),
     pluviometria_mensal = lambda x: converter_em_numero(x['pluviometria_mensal']),
     pluviometria_hist = lambda x: converter_em_numero(x['pluviometria_hist'])
-    )
+)
 ```
 
+
+```{python}
+# criando a coluna do mês
+mananciais_arrumado['data_mes'] = pd.DatetimeIndex(mananciais_arrumado['data']).month
+
+# criando a coluna do ano
+mananciais_arrumado['data_ano'] = pd.DatetimeIndex(mananciais_arrumado['data']).year
+
+# cria a coluna do mes/ano
+mananciais_arrumado['data_mes_ano'] = mananciais_arrumado['data'].apply(lambda x : x.replace(day=1))
+```
 
 
 
@@ -214,48 +226,32 @@ tabela_sistemas.sort_values("Volume", ascending=True)
 ### Como o volume armazenado variou ao longo de 2022?
 
 
-
-
 ```{python}
-# sns.lineplot(x = "data", y = "volume_porcentagem", data = mananciais_arrumado)
+mananciais_arrumado
 ```
-
-
-```{python}
-# criando a coluna do mês
-mananciais_arrumado['data_mes'] = pd.DatetimeIndex(mananciais_arrumado['data']).month
-
-# criando a coluna do ano
-mananciais_arrumado['data_ano'] = pd.DatetimeIndex(mananciais_arrumado['data']).year
-```
-
-
-```{python}
-mananciais_2022 = mananciais_arrumado.query("data_ano == 2022")
-
-
-# sns.lineplot(x = "data", y = "volume_porcentagem", data = mananciais_2022)
-```
-
 
 - Agrupar por ano e sistema
 
 ```{python}
 mananciais_sumarizado = (
     mananciais_arrumado.
-    query("data_ano == 2022").
-    groupby(["sistema", "data_mes"], as_index = False).
+    groupby(["sistema", "data_mes_ano"], as_index = False).
     agg(media_porcentagem = ("volume_porcentagem", "mean"))
     )
 mananciais_sumarizado
+
+mananciais_sumarizado.info()
 ```
 
 ```{python}
-dados_cantareira = mananciais_sumarizado.query("sistema == 'Cantareira'")
-
+dados_cantareira = mananciais_sumarizado.query("sistema == 'Cantareira'").reset_index()
 
 dados_cantareira
+mananciais_arrumado
+```
 
-
-# sns.lineplot(x = mananciais_sumarizado["data_mes"], y = mananciais_sumarizado["media_porcentagem"], dropna = True)
+```{python}
+sns.lineplot(data = mananciais_arrumado, x = "data", y = "volume_porcentagem")
+# plt.axline([0,0], slope = 0, color = "red")
+mananciais_arrumado
 ```
