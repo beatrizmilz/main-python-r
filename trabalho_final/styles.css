@@ -1,0 +1,25 @@
+pre code {
+    background-color: #f0f2f4;
+}
+
+
+  #quarto-content:before {
+    content: "";
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    z-index: -1;
+    background-image: url("water-2.png");
+    background-repeat: no-repeat;
+    background-position: fixed;
+    background-size: contain;
+
+}
+
+
+  .page-columns .content{
+    background-color: #fffffff2;
+    padding: 10pt;
+  }  

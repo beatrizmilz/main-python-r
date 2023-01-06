@@ -102,6 +102,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -142,6 +143,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div class="quarto-category">Python</div>
     <div class="quarto-category">Pandas</div>
     <div class="quarto-category">Seaborn</div>
+    <div class="quarto-category">Altair</div>
   </div>
   </div>
 
@@ -430,7 +432,7 @@ memory usage: 4.4+ MB</code></pre>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    sort_values(<span class="st">"Volume operacional"</span>, ascending<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="47">
 
 <div>
 
@@ -502,7 +504,7 @@ memory usage: 4.4+ MB</code></pre>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>     <span class="bu">filter</span>([<span class="st">"Sistema"</span>, <span class="st">"Volume"</span>, <span class="st">"Volume operacional"</span>])</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="48">
 
 <div>
 
@@ -607,21 +609,15 @@ memory usage: 40.5+ KB</code></pre>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    color <span class="op">=</span> <span class="st">'sistema'</span></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>/home/codespace/.python/current/lib/python3.10/site-packages/altair/utils/core.py:317: FutureWarning:
+<div class="cell-output cell-output-display" data-execution_count="50">
 
-iteritems is deprecated and will be removed in a future version. Use .items instead.
-</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="14">
-
-<div id="altair-viz-a4d02a2fc34445998e6fe623c7087808"></div>
+<div id="altair-viz-f6c42745336240d298ba1a6fdb393c64"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-a4d02a2fc34445998e6fe623c7087808") {
-      outputDiv = document.getElementById("altair-viz-a4d02a2fc34445998e6fe623c7087808");
+    if (outputDiv.id !== "altair-viz-f6c42745336240d298ba1a6fdb393c64") {
+      outputDiv = document.getElementById("altair-viz-f6c42745336240d298ba1a6fdb393c64");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -676,13 +672,13 @@ iteritems is deprecated and will be removed in a future version. Use .items inst
 <div class="cell" data-execution_count="18">
 <details open="">
 <summary>Código</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>grafico <span class="op">=</span> sns.FacetGrid(mananciais_sumarizado, col <span class="op">=</span> <span class="st">"sistema"</span>, col_wrap <span class="op">=</span> <span class="dv">2</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>grafico.map_dataframe(sns.lineplot, x <span class="op">=</span> <span class="st">"data_mes_ano"</span>, y <span class="op">=</span> <span class="st">"media_porcentagem"</span>, hue <span class="op">=</span>  <span class="st">"sistema"</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>grafico </span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>grafico <span class="op">=</span> sns.FacetGrid(mananciais_sumarizado, col <span class="op">=</span> <span class="st">"sistema"</span>, col_wrap <span class="op">=</span> <span class="dv">2</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>grafico.map_dataframe(sns.lineplot, x <span class="op">=</span> <span class="st">"data_mes_ano"</span>, y <span class="op">=</span> <span class="st">"media_porcentagem"</span>, hue <span class="op">=</span>  <span class="st">"sistema"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>grafico </span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="15">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid at 0x7fc2f75af4c0&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid at 0x7f01ab10fca0&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -701,14 +697,14 @@ iteritems is deprecated and will be removed in a future version. Use .items inst
 <div class="cell" data-execution_count="19">
 <details open="">
 <summary>Código</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtra dados do sistema cantareira</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dados_cantareira <span class="op">=</span> mananciais_sumarizado.query(<span class="st">"sistema == 'Cantareira'"</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cria um array de verdadeiro ou falso, sendo verdadeiro os valores de 2022</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>ano_2022 <span class="op">=</span> dados_cantareira.data_mes_ano <span class="op">&gt;=</span> np.datetime64(<span class="st">'2022-01-01'</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># filtra os dados da cantareira com o array criado acima</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>dados_cantareira_2022 <span class="op">=</span> dados_cantareira[ano_2022]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtra dados do sistema cantareira</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>dados_cantareira <span class="op">=</span> mananciais_sumarizado.query(<span class="st">"sistema == 'Cantareira'"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># cria um array de verdadeiro ou falso, sendo verdadeiro os valores de 2022</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>ano_2022 <span class="op">=</span> dados_cantareira.data_mes_ano <span class="op">&gt;=</span> np.datetime64(<span class="st">'2022-01-01'</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># filtra os dados da cantareira com o array criado acima</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>dados_cantareira_2022 <span class="op">=</span> dados_cantareira[ano_2022]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="panel-tabset">
@@ -718,20 +714,20 @@ iteritems is deprecated and will be removed in a future version. Use .items inst
 <div class="cell" data-execution_count="20">
 <details open="">
 <summary>Código</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>alt.Chart(dados_cantareira_2022).mark_line().encode(</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> alt.X(<span class="st">'data_mes_ano'</span>, title <span class="op">=</span> <span class="st">"Mês e Ano"</span>), </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> alt.Y(<span class="st">'media_porcentagem'</span>, title <span class="op">=</span> <span class="st">'Volume armazenado (%)'</span>)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>alt.Chart(dados_cantareira_2022).mark_line().encode(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> alt.X(<span class="st">'data_mes_ano'</span>, title <span class="op">=</span> <span class="st">"Mês e Ano"</span>), </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> alt.Y(<span class="st">'media_porcentagem'</span>, title <span class="op">=</span> <span class="st">'Volume armazenado (%)'</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="17">
+<div class="cell-output cell-output-display" data-execution_count="53">
 
-<div id="altair-viz-4015e3e704e6435d9ce87cce41b3e83c"></div>
+<div id="altair-viz-cd765bb996b145ba8bc9914ee7423366"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-4015e3e704e6435d9ce87cce41b3e83c") {
-      outputDiv = document.getElementById("altair-viz-4015e3e704e6435d9ce87cce41b3e83c");
+    if (outputDiv.id !== "altair-viz-cd765bb996b145ba8bc9914ee7423366") {
+      outputDiv = document.getElementById("altair-viz-cd765bb996b145ba8bc9914ee7423366");
     }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
@@ -786,8 +782,8 @@ iteritems is deprecated and will be removed in a future version. Use .items inst
 <div class="cell" data-execution_count="21">
 <details open="">
 <summary>Código</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> <span class="st">"data_mes_ano"</span>, y <span class="op">=</span> <span class="st">"media_porcentagem"</span>, data <span class="op">=</span> dados_cantareira_2022)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> <span class="st">"data_mes_ano"</span>, y <span class="op">=</span> <span class="st">"media_porcentagem"</span>, data <span class="op">=</span> dados_cantareira_2022)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">

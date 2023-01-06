@@ -3,7 +3,7 @@ title: "Abastecimento público da Região Metropolitana de São Paulo"
 subtitle: "Trabalho final para o curso Python para usuários de R, da Curso-R"
 author: "Beatriz Milz"
 date: "2023-01-06"
-categories: ["Análise exploratória", "Estudos", "Quarto", "Python", "Pandas", "Seaborn"]
+categories: ["Análise exploratória", "Estudos", "Quarto", "Python", "Pandas", "Seaborn", "Altair"]
 #image: "logo-featured.jpg"
 toc: true
 draft: false
@@ -11,6 +11,13 @@ jupyter: python3
 lang: pt
 code-fold: show
 theme: cerulean
+execute:
+    message: false
+    warning: false
+    fig-align: 'center'
+format:
+  html:
+    css: styles.css    
 ---
 
 
