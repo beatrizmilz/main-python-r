@@ -2,7 +2,7 @@
 title: "Abastecimento público da Região Metropolitana de São Paulo"
 subtitle: "Trabalho final para o curso Python para usuários de R, da Curso-R"
 author: "Beatriz Milz"
-date: "2023-01-01"
+date: "2023-01-06"
 categories: ["Análise exploratória", "Estudos", "Quarto", "Python", "Pandas", "Seaborn"]
 #image: "logo-featured.jpg"
 toc: true
@@ -262,16 +262,34 @@ mananciais_sumarizado.info()
 
 Agora é possível apresentar em gráficos:
 
+
+::: {.panel-tabset}
+
+## Gráfico com Altair
+
+
+```{python}
+#| fig-align: center
+alt.Chart(mananciais_sumarizado).mark_line().encode(
+    x = alt.X('data_mes_ano', title = "Mês e Ano"), 
+    y = alt.Y('media_porcentagem', title = 'Volume armazenado (%)'),
+    color = 'sistema'
+)
+```
+
+
+
+## Gráfico com Seaborn
 ```{python}
 #| fig-align: center
 grafico = sns.FacetGrid(mananciais_sumarizado, col = "sistema", col_wrap = 2)
 grafico.map_dataframe(sns.lineplot, x = "data_mes_ano", y = "media_porcentagem", hue =  "sistema")
-plt.xlabel("Mês e Ano")
-
 
 grafico 
 ```
 
+
+:::
 
 ### Como o volume do sistema Cantareira variou ao longo de 2022?
 
@@ -312,22 +330,4 @@ plt.show()
 ``` 
 
 :::
-
-
-
-## Reproduzindo os gráficos com a biblioteca altair
-
-
-
-### Gráfico volume dos sistemas
-
-
-```{python}
-#| fig-align: center
-alt.Chart(mananciais_sumarizado).mark_line().encode(
-    x = alt.X('data_mes_ano', title = "Mês e Ano"), 
-    y = alt.Y('media_porcentagem', title = 'Volume armazenado (%)'),
-    color = 'sistema'
-)
-```
 
