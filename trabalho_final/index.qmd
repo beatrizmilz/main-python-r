@@ -88,6 +88,9 @@ pip install --upgrade pip
 # Para instalar as bibliotecas pandas e seaborn:
 pip install pandas
 pip install seaborn
+
+# Para instalar a biblioteca altair e os dados de exemplo:
+pip install altair vega_datasets
 ```
 
 ## Carregar bibliotecas
@@ -100,6 +103,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import altair as alt # importar o altair
 ```
 
 
@@ -285,26 +289,34 @@ dados_cantareira_2022 = dados_cantareira[ano_2022]
 ```
 
 
+
+::: {.panel-tabset}
+
+## Gráfico com Altair
+
+```{python}
+#| fig-align: center
+alt.Chart(dados_cantareira_2022).mark_line().encode(
+    x = alt.X('data_mes_ano', title = "Mês e Ano"), 
+    y = alt.Y('media_porcentagem', title = 'Volume armazenado (%)')
+    )
+```
+
+
+## Gráfico com Seaborn
+
 ```{python}
 #| fig-align: center
 sns.lineplot(x = "data_mes_ano", y = "media_porcentagem", data = dados_cantareira_2022)
 plt.show()
 ``` 
 
+:::
+
+
 
 ## Reproduzindo os gráficos com a biblioteca altair
 
-
-```{python}
-#| eval: false
-pip install altair vega_datasets
-```
-
-
-```{python}
-# importar o altair
-import altair as alt
-```
 
 
 ### Gráfico volume dos sistemas
@@ -317,16 +329,5 @@ alt.Chart(mananciais_sumarizado).mark_line().encode(
     y = alt.Y('media_porcentagem', title = 'Volume armazenado (%)'),
     color = 'sistema'
 )
-```
-
-
-### Gráfico Cantareira 2022
-
-```{python}
-#| fig-align: center
-alt.Chart(dados_cantareira_2022).mark_line().encode(
-    x = alt.X('data_mes_ano', title = "Mês e Ano"), 
-    y = alt.Y('media_porcentagem', title = 'Volume armazenado (%)')
-    )
 ```
 
