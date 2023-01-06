@@ -125,7 +125,7 @@ Quais são as colunas disponíveis?
 
 ```{python}
 # descobrindo as colunas e seus tipos
-mananciais.info(null_counts = False)
+mananciais.info(show_counts = False)
 ```
 
 É necessário arrumar o tipo de algumas colunas (algumas estão como texto mas deveriam ser números), e criar novas colunas que podem ser úteis posteriormente (ano, mês, data arredondada para o início do mês, etc).
@@ -314,6 +314,8 @@ dados_cantareira_2022 = dados_cantareira[ano_2022]
 
 ```{python}
 #| fig-align: center
+#| warning: false
+#| message: false
 alt.Chart(dados_cantareira_2022).mark_line().encode(
     x = alt.X('data_mes_ano', title = "Mês e Ano"), 
     y = alt.Y('media_porcentagem', title = 'Volume armazenado (%)')
