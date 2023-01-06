@@ -262,6 +262,8 @@ Agora é possível apresentar em gráficos:
 #| fig-align: center
 grafico = sns.FacetGrid(mananciais_sumarizado, col = "sistema", col_wrap = 2)
 grafico.map_dataframe(sns.lineplot, x = "data_mes_ano", y = "media_porcentagem", hue =  "sistema")
+plt.xlabel("Mês e Ano")
+
 
 grafico 
 ```
