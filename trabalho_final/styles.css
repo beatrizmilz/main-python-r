@@ -15,6 +15,7 @@ pre code {
     background-repeat: no-repeat;
     background-position: fixed;
     background-size: contain;
+    opacity: 0.1;
 
 }
 
