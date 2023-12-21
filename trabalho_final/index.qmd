@@ -48,6 +48,8 @@ versao_python = python_version()
 
 # escrevendo um parágrafo que apresente o valor guardado na variável versao_python
 
+## adicionar novo formato inline do quarto
+
 from IPython.display import display, Markdown
 
 display(Markdown("""
@@ -189,6 +191,8 @@ array_mananciais = mananciais_arrumado['sistema'].unique()
 
 lista_mananciais = array_mananciais.tolist()
 
+## Padronizar '' e "". No python, a recomendação é usar '' para strings e """ para doc strings (documentação)
+
 texto_mananciais = ", ".join(lista_mananciais[:-1])
 
 ultimo_sistema = lista_mananciais[-1]
@@ -228,6 +232,15 @@ sistemas_atualmente["Sistema"] = sistemas_atualmente["sistema"]
 A seguir estão apresentados os sistemas ordenados por  volume operacional (quantidade absoluta):
 ```{python}
 # ordenando de forma crescente segundo o Volume operacional e selecionando as colunas desejadas
+
+## Aqui tem outra opção de fazer "pipes" sem o (), que seria usando o \. assim:
+
+## verificar qual modo você prefere
+
+# sistemas_atualmente \.
+#    filter(["Sistema", "Volume", "Volume operacional"]) \.
+#    sort_values("Volume operacional", ascending=True)
+
 (
     sistemas_atualmente.
     filter(["Sistema", "Volume", "Volume operacional"]).
@@ -300,6 +313,8 @@ grafico
 
 ### Como o volume do sistema Cantareira variou ao longo de 2022?
 
+Adicionar interpretação
+
 
 ```{python}
 # filtra dados do sistema cantareira
@@ -340,3 +355,6 @@ plt.show()
 
 :::
 
+## Conclusão
+
+Adicionar conclusão
